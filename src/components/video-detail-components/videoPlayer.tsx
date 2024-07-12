@@ -98,7 +98,7 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
           onTimeUpdate={(e) => onTimeUpdate?.(e.currentTime)}
         >
           <MediaProvider></MediaProvider>
-          <PlyrLayout posterFrame={thumbnail} icons={customIcons} />
+          <PlyrLayout icons={customIcons} />
         </MediaPlayer>
       </div>
     );
