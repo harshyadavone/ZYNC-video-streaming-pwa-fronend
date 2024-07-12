@@ -1,0 +1,536 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Space+Grotesk:wght@100;200;300;400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 142.1 76.2% 36.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --red: 0, 100%, 50%, 1;
+    --foreground: 0 0% 95%;
+    --card: 24 9.8% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 142.4 71.8% 29.2%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+body {
+  /* background-color: #141414; */
+  background-color: hsl(var(--background));
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.input {
+  background-color: #1b1a1a;
+}
+
+.slide-in-text {
+  animation: slideIn 1s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.light-beam {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.light-beam::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(
+    0deg,
+    transparent,
+    rgba(67, 70, 74, 0.8),
+    transparent
+  );
+  transform: skewY(-45deg);
+  pointer-events: none;
+  animation: lightBeam 4s ease-in-out 1 forwards;
+  opacity: 0.8;
+}
+
+@keyframes lightBeam {
+  0% {
+    transform: skewY(-45deg) translateY(-200%);
+  }
+  50% {
+    transform: skewY(-45deg) translateY(200%);
+  }
+  100% {
+    transform: skewY(-45deg) translateY(200%);
+  }
+}
+
+.sheet-content {
+  transition: filter 0.3s ease;
+}
+
+.sheet-content:hover .blurable {
+  filter: blur(1px);
+  transition: filter 0.3s ease, background-color 0.3s ease;
+}
+
+.sheet-content:hover .blurable:hover {
+  filter: none;
+  background-color: rgba(90, 91, 94, 0.1);
+}
+
+.sheet-content .blurable {
+  position: relative;
+  overflow: hidden;
+}
+
+.sheet-content .blurable::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(90, 91, 94, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.sheet-content:hover .blurable:hover::before {
+  opacity: 1;
+}
+
+body {
+  font-weight: normal;
+}
+
+@keyframes pulse1 {
+  0% {
+    box-shadow: 0 0 0 0 rgba(100, 441, 44, 0.2);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+.pulse-avatar {
+  animation: pulse1 2s infinite;
+}
+
+/* Custom scrollbar styles*/
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #555555;
+}
+
+/*  no scrollbar for suggestion bar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Video Player Css */
+
+.plyr {
+  --plyr-color-main: hsl(var(--red));
+  --plyr-border-radius: var(--radius);
+
+  --plyr-font-family: "Space Grotesk", sans-serif;
+  --plyr-font-weight-regular: 400;
+  --plyr-font-size-small: 13px;
+  --plyr-font-size-base: 15px;
+  --plyr-font-size-large: 18px;
+  --plyr-font-size-xlarge: 21px;
+  --plyr-line-height: 1.7;
+
+  --plyr-audio-border: 1px solid hsl(var(--border));
+
+  --plyr-video-controls-background: linear-gradient(
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.75)
+  );
+
+  /* Focus */
+  --plyr-focus-visible-color: hsl(var(--red));
+
+  /* Control */
+  --plyr-control-spacing: 10px;
+  --plyr-control-radius: var(--radius);
+  --plyr-control-icon-size: 18px;
+  --plyr-control-toggle-checked-background: hsl(var(--red));
+
+  /* --plyr-audio-controls-background: hsl(var(--white)); */
+  /* --plyr-audio-control-background-hover: hsl(var(--primary)); */
+  /* --plyr-audio-control-color: hsl(var(--foreground)); */
+  /* --plyr-audio-control-color-hover: hsl(var(--primary-foreground)); */
+
+  /* --plyr-video-control-color: hsl(var(--foreground)); */
+  /* --plyr-video-control-color-hover: hsl(var(--primary-foreground)); */
+  --plyr-video-control-background-hover: hsl(var(--muted));
+
+  /* Badge */
+  --plyr-font-size-badge: 9px;
+
+  --plyr-badge-background: hsl(var(--muted));
+  --plyr-badge-border-radius: var(--radius);
+  --plyr-badge-text-color: hsl(var(--muted-foreground));
+
+  /* Captions */
+  --plyr-captions-background: rgba(0, 0, 0, 0.8);
+  --plyr-captions-text-color: hsl(var(--foreground));
+
+  /* Menu */
+  --plyr-font-size-menu: var(--plyr-font-size-small, 13px);
+
+  --plyr-menu-background: hsl(var(--popover));
+  --plyr-menu-color: hsl(var(--popover-foreground));
+  --plyr-menu-radius: var(--radius);
+  --plyr-menu-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+
+  --plyr-menu-arrow-size: 4px;
+  --plyr-menu-arrow-color: hsl(var(--muted-foreground));
+  --plyr-menu-item-arrow-size: 4px;
+
+  --plyr-menu-back-border-color: hsl(var(--border));
+  --plyr-menu-back-border-shadow-color: hsl(var(--background));
+
+  /* Range */
+  --plyr-range-track-height: 5px;
+  --plyr-range-fill-background: hsl(var(--red));
+
+  --plyr-range-thumb-height: 13px;
+  --plyr-range-thumb-active-shadow-width: 3px;
+  --plyr-range-thumb-background: hsl(var(--white));
+  --plyr-range-thumb-shadow: 0 1px 1px rgba(35, 40, 47, 0.15),
+    0 0 0 1px rgba(35, 40, 47, 0.2);
+
+  --plyr-audio-range-track-background: hsl(var(--muted));
+  --plyr-audio-range-thumb-active-shadow-color: rgba(35, 40, 47, 0.1);
+
+  --plyr-video-range-track-background: rgba(255, 255, 255, 0.25);
+
+  /* Progress */
+  --plyr-font-size-progress-marker: var(--plyr-font-size-small, 13px);
+
+  --plyr-progress-loading-background: rgba(35, 40, 47, 0.6);
+  --plyr-progress-loading-size: 25px;
+
+  --plyr-progress-marker-width: 3px;
+  --plyr-progress-marker-background: hsl(var(--background));
+
+  --plyr-progress-live-color: hsl(var(--foreground));
+  --plyr-progress-live-edge-color: hsl(var(--red));
+
+  --plyr-audio-progress-buffered-background: hsl(var(--muted));
+
+  --plyr-video-progress-buffered-background: rgba(25455, 255, 255, 0.25);
+
+  /* Time */
+  --plyr-font-size-time: var(--plyr-font-size-small, 13px);
+
+  --plyr-time-radius: var(--radius);
+
+  /* Tooltip */
+  --plyr-tooltip-background: hsl(var(--popover));
+  --plyr-tooltip-radius: var(--radius);
+  --plyr-tooltip-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --plyr-tooltip-color: hsl(var(--popover-foreground));
+  --plyr-tooltip-arrow-size: 4px;
+
+  /* Thumbnail */
+  --plyr-thumbnail-aspect-ratio: 16 / 9;
+
+  --plyr-thumbnail-min-width: 140px;
+  --plyr-thumbnail-min-height: calc(
+    var(--plyr-thumbnail-min-width) / var(--plyr-thumbnail-aspect-ratio)
+  );
+
+  --plyr-thumbnail-max-width: 180px;
+  --plyr-thumbnail-max-height: calc(
+    var(--plyr-thumbnail-max-width) / var(--plyr-thumbnail-aspect-ratio)
+  );
+
+  /* Live Button */
+  --plyr-font-size-live-button: 12px;
+  --plyr-font-weight-live-button: 600;
+
+  --plyr-live-button-bg: hsl(var(--muted));
+  --plyr-live-button-border-radius: var(--radius);
+  --plyr-live-button-color: hsl(var(--muted-foreground));
+  --plyr-live-button-letter-spacing: 1.5px;
+  --plyr-live-button-padding: 1px 4px;
+
+  --plyr-live-button-edge-bg: hsl(var(--destructive));
+  --plyr-live-button-edge-color: hsl(var(--destructive-foreground));
+}
+
+.google-spinner {
+  margin: 0 auto;
+  position: relative;
+}
+
+.google-spinner .circular {
+  animation: rotate 2s linear infinite;
+  height: 100%;
+  transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.google-spinner .path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+@keyframes color {
+  100%,
+  0% {
+    stroke: #d62d20;
+  }
+  40% {
+    stroke: #0057e7;
+  }
+  66% {
+    stroke: #008744;
+  }
+  80%,
+  90% {
+    stroke: #ffa700;
+  }
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #2a2a2a;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton.hide {
+  display: none;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #2a2a2a;
+  }
+  50% {
+    background-color: #333333;
+  }
+  100% {
+    background-color: #2a2a2a;
+  }
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.image.loaded {
+  opacity: 1;
+}
+
+.image.error {
+  display: none;
+}
+
+.image.error::after {
+  content: "Failed to load image";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #888;
+  font-size: 14px;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+}
+
+.transition-transform {
+  transition-property: transform;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.translate-y-0 {
+  transform: translateY(0);
+}
+
+.translate-y-full {
+  transform: translateY(100%);
+}
+
+
+::selection {
+  background-color: rgba(100, 149, 237, 0.25);
+  color: inherit;
+}
+
+
+/* Voice Search Animations */
+
+@keyframes soundWave {
+  0%, 100% {
+    transform: scaleY(0.5);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+
+/* Custom Css for scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555555;
+} 
