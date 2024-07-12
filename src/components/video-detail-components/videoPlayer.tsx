@@ -38,7 +38,6 @@ import { forwardRef } from "react";
 
 type NewType = {
   src: string;
-  // thumbnail: string;
   title: string;
   duration: number;
   autoPlay: boolean;
