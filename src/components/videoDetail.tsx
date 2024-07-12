@@ -130,7 +130,7 @@ const VideoDetailspage: React.FC = () => {
           duration={video.duration}
           autoPlay
           src={video.videoUrl}
-          thumbnail={video.thumbnail}
+          // thumbnail={video.thumbnail}
           title={video.title}
           key={video.id}
           onTimeUpdate={handleTimeUpdate}

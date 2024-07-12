@@ -36,18 +36,20 @@ import {
 } from "../ui/Icons";
 import { forwardRef } from "react";
 
-type Props = {
+type NewType = {
   src: string;
-  thumbnail: string;
+  // thumbnail: string;
   title: string;
   duration: number;
   autoPlay: boolean;
   onTimeUpdate?: (currentTime: number) => void;
 };
 
+type Props = NewType;
+
 const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
   (
-    { src, duration, title, autoPlay = true, thumbnail, onTimeUpdate },
+    { src, duration, title, autoPlay = true, onTimeUpdate },
     ref
   ): JSX.Element => {
     function onProviderChange(provider: any) {
