@@ -17,13 +17,21 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
           <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <App />
-            <Toaster
-              position="top-right"
-              theme="dark"
-            />{" "}
+            <Toaster position="top-right" theme="dark" />{" "}
           </ThemeProvider>
         </BrowserRouter>
       </Provider>
     </QueryClientProvider>
   </React.StrictMode>
 );
+
+// Add service worker registration
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/registerSW.js").then((registration) => {
+      console.log("SW registered: ", registration);
+    }).catch((registrationError) => {
+      console.log("SW registration failed: ", registrationError);
+    });
+  });
+}
