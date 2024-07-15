@@ -44,19 +44,6 @@ import RelatedVideoSkeleton from "../skeleton/RelatedVideoSkeleton";
 import VideoDetailsSkeleton from "../skeleton/VideoDetailsSkeleton";
 import { toast } from "sonner";
 
-// Types for poll-related data
-// interface PollOption {
-//   id: number;
-//   text: string;
-//   votes: { userId: number }[];
-// }
-
-// export interface Poll {
-//   id: number;
-//   question: string;
-//   options: PollOption[];
-// }
-
 export interface Poll {
   id: number;
   options: PollOption[];

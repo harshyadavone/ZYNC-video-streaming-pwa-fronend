@@ -34,7 +34,7 @@ import {
   VolumeHighIcon,
   VolumeOffIcon,
 } from "../ui/Icons";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 
 type NewType = {
   src: string;
@@ -51,6 +51,8 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
     { src, duration, title, autoPlay = true, onTimeUpdate },
     ref
   ): JSX.Element => {
+    const playerRef = useRef<HTMLDivElement | null>(null);
+
     function onProviderChange(provider: any) {
       if (isHLSProvider(provider)) {
         provider.library = Hls;
@@ -81,8 +83,27 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
       Volume: IconWrapper(VolumeHighIcon),
     };
 
+    useEffect(() => {
+      const player = playerRef.current;
+      if (player) {
+        const settingsMenu = player.querySelector('.plyr__menu') as HTMLElement;
+        if (settingsMenu) {
+          const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+          };
+          settingsMenu.addEventListener('wheel', handleWheel, { passive: false });
+
+          // Cleanup function
+          return () => {
+            settingsMenu.removeEventListener('wheel', handleWheel);
+          };
+        }
+      }
+    }, []);
+
     return (
-      <div className="custom-video-player">
+      <div className="custom-video-player" ref={playerRef}>
         <MediaPlayer
           ref={ref}
           title={title}

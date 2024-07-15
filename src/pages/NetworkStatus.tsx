@@ -31,9 +31,7 @@ const NetworkStatus = () => {
   }, [navigator.onLine]);
 
   return (
-    <div className={`network-status ${isOnline ? "online" : "offline"}`}>
-      {isOnline ? "Online" : "Offline"}
-    </div>
+    <div className={`network-status ${isOnline ? "online" : "offline"}`}></div>
   );
 };
 
