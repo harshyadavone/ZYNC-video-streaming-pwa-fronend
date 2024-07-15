@@ -31,7 +31,7 @@ const MyChannel: React.FC = () => {
   const tabs = ["Videos", "Playlists", "About"];
 
 
-  const { editForm, handleInputChange, handleFileChange, resetForm } =
+  const { editForm, handleInputChange, handleFileChange } =
     useChannelForm(channelData?.channel);
 
   const closeCreateDialog = useCallback(() => {
@@ -62,11 +62,11 @@ const MyChannel: React.FC = () => {
       } else {
         createMutation(formData);
       }
-      resetForm();
+      // resetForm();
       setIsEditFormOpen(false);
       setIsCreateFormOpen(false);
     },
-    [editForm, channelData?.channel, updateMutation, createMutation, resetForm]
+    [editForm, channelData?.channel, updateMutation, createMutation]
   );
 
   if (isLoading) return <MyChannelSkeleton />;
@@ -74,7 +74,7 @@ const MyChannel: React.FC = () => {
   if (error) return <ErrorDisplay message={error.message} />;
 
   return (
-    <div className=" mx-auto py-8 ">
+    <div className="w-full mx-auto py-8 ">
       {channelData?.channel ? (
         <>
           <MyChannelHeader

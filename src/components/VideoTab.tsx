@@ -4,6 +4,7 @@ import LazyImage from "./LazyImage";
 import { useChannelVideos } from "../hooks/useChannelVideos";
 import { useInView } from "react-intersection-observer";
 import Loader2 from "./Loader2";
+import VideoSkeleton from "../skeleton/VideoSkeleton";
 
 const VideoTab: React.FC<{ channelId: number }> = ({ channelId }) => {
   const [sortOrder, setSortOrder] = React.useState<"newest" | "oldest">(
@@ -16,7 +17,7 @@ const VideoTab: React.FC<{ channelId: number }> = ({ channelId }) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useChannelVideos(channelId, 1, 10, sortOrder); // TODO: add sorting and fiiltering
+  } = useChannelVideos(channelId, 1, 10, sortOrder);
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -31,7 +32,7 @@ const VideoTab: React.FC<{ channelId: number }> = ({ channelId }) => {
 
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="px-4"><VideoSkeleton grid="3" /></div>;
   }
 
   if (isError) {

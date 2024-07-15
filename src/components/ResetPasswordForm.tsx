@@ -19,7 +19,6 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ code }) => {
   } = useMutation({
     mutationFn: () => resetPassword({ verificationCode: code, password }),
     onSuccess: () => {
-      // TODO: redirect to login page
       navigate("/login");
     },
   });

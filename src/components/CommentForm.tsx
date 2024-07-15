@@ -38,7 +38,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
           ref={textareaRef}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className=" w-full  left-0 flex-grow overflow-y-auto bg-card border p-2 md:bg-card/90 rounded-xl text-secondary-foreground resize-none focus:outline-none  focus:ring-0 text-sm"
+          className=" w-full  left-0 flex-grow overflow-y-auto  bg-card border p-2 md:bg-card/90 rounded-xl text-secondary-foreground resize-none focus:outline-none  focus:ring-0 text-sm"
           placeholder={placeholder}
           rows={1}
         />

@@ -24,6 +24,8 @@ import PlaylistsPage from "./pages/PlaylistsPage";
 import Playlistpage from "./pages/Playlistpage";
 import ChannelPlaylistPage from "./components/playlists/ChannelPlaylist";
 import BookmarkPage from "./pages/BookmarkPage";
+import MySubscriptionsPage from "./pages/MySubscriptionsPage";
+import OfflinePage from "./pages/OfflinePage";
 
 function App() {
   // set the navigate function on our API client for use in the axios error interceptor
@@ -47,6 +49,7 @@ function App() {
         <Route path="/playlist/:playlistId" Component={Playlistpage} />
         <Route path="/my-channel/:channelId/upload" Component={UploadPage} />
         <Route path="/search/:query" element={<SearchResults />} />
+        <Route path="/subscriptions" element={<MySubscriptionsPage />} />
         <Route path="settings" element={<Settings />}>
           <Route index element={<OtherSettings />} />
           <Route path="/settings/account" element={<Account />} />
@@ -61,6 +64,7 @@ function App() {
       <Route path="/email/verify/:code" element={<VerifyEmail />} />
       <Route path="/password/forgot" element={<ForgotPassword />} />
       <Route path="/password/reset" element={<ResetPassword />} />
+      <Route path="/" element={!navigator.onLine ? <OfflinePage /> : <AppContainer />} />
     </Routes>
   );
 }

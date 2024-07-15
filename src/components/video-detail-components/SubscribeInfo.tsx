@@ -102,25 +102,30 @@ const SubscribeInfo: React.FC<Props> = ({
           </AvatarFallback>
         </Avatar>
         <div>
-          <Link to={`/channel/${channelId}`} className="font-normal hover:text-primary duration-300">{channelName}</Link>
+          <Link
+            to={`/channel/${channelId}`}
+            className="font-normal hover:text-primary duration-300 text-sm md:text-md line-clamp-1"
+          >
+            {channelName}
+          </Link>
           <motion.p
             key={subscribeCount}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-sm text-muted-foreground"
+            className="text-xs md:text-sm text-muted-foreground line-clamp-1"
           >
             {subscribeCount.toLocaleString()}{" "}
             {subscribeCount === 1 ? "subscriber" : "subscribers"}
           </motion.p>
         </div>
       </div>
-      <div className="pl-1 mt-2 md:mt-0 md:pl-0 w-full md:w-auto flex justify-end items-center">
+      <div className="pl-1 mt-2 md:mt-0 md:pl-0  md:w-auto flex justify-end items-center">
         <motion.button
           // whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleToggleSubscription}
           disabled={toggleSubscriptionMutation.isPending}
-          className={`light-beam rounded-xl border-solid border p-2 px-4 transition duration-200 w-full md:w-auto
+          className={`light-beam rounded-xl border-solid border p-1.5 md:p-2 px-4 transition duration-200 w-auto
             ${
               localSubscriptionStatus
                 ? "bg-muted text-muted-foreground"

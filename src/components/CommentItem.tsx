@@ -162,22 +162,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <MessageSquare size={14} className="mr-1" />
           Reply
         </button>
-        {comment._count?.replies > 0 && (
-          <button
-            onClick={toggleReplies}
-            className="text-sm text-primary hover:underline flex items-center"
-          >
-            {showReplies ? (
-              <ChevronUp size={14} className="mr-1" />
-            ) : (
-              <ChevronDown size={14} className="mr-1" />
-            )}
-            {showReplies ? "Hide" : "Show"} {comment._count.replies}{" "}
-            {comment._count.replies === 1 ? "reply" : "replies"}
-          </button>
-        )}
-        {/* @ts-ignore */}
-        {user.id === comment.user.id && (
+       
+        {user?.id === comment.user.id && (
           <>
             <button
               onClick={() => setIsEditing(true)}
@@ -216,6 +202,21 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </Modal>
           </>
         )}
+         {comment._count?.replies > 0 && (
+          <button
+            onClick={toggleReplies}
+            className="text-sm text-primary hover:underline flex items-center"
+          >
+            {showReplies ? (
+              <ChevronUp size={14} className="mr-1" />
+            ) : (
+              <ChevronDown size={14} className="mr-1" />
+            )}
+            {showReplies ? "Hide" : "Show"} {comment._count.replies}{" "}
+            {comment._count.replies === 1 ? "reply" : "replies"}
+          </button>
+        )}
+        
       </div>
     </>
   );

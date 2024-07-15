@@ -45,10 +45,10 @@ export const useCreatePlaylist = () => {
 };
 
 // Update Playlist
-export const useUpdatePlaylist = (id: string) => {
+export const useUpdatePlaylist = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ ...data }: Partial<Playlist> & { id: string }) =>
+    mutationFn: ({ ...data }: Partial<Playlist> & { id: number }) =>
       API.put(`playlist/playlists/${id}`, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["playlists", variables.id] });

@@ -4,27 +4,44 @@ import { VideoCard } from "./VideoCard";
 import VideoSkeleton from "../skeleton/VideoSkeleton";
 
 const TrendingVideos: React.FC = () => {
-  const { video, isLoading, isError } : any = useTrendingVideos();
+  const { video, isLoading, isError }: any = useTrendingVideos();
 
   if (isLoading) {
-    return <div className="px-4"><VideoSkeleton grid="3" /></div>;
+    return (
+      <div className="w-full px-4">
+        <VideoSkeleton grid="4" />
+      </div>
+    );
   }
 
-  if (isError || !video) {
-    return <div>Error fetching trending videos</div>;
+  if (isError) {
+    return (
+      <div className="text-red-600 font-medium tracking-wide mt-2">
+        Error fetching trending videos
+      </div>
+    );
+  }
+
+  if (!video || !video.videos) {
+    return (
+      <div className="text-red-600 font-medium tracking-wide mt-2">
+        No videos available
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Trending Videos</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {video.videos.map((video: any) => (
-          <VideoCard video={video} />
-        ))}
+    <div className="flex flex-col items-center w-full mt-2 text-foreground bg-background smooth-scroll">
+      <div className="w-full max-w-full"></div>
+      <div className="w-full px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+          {video.videos.map((video: any) => (
+            <VideoCard key={video.id} video={video} />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export default TrendingVideos;
-

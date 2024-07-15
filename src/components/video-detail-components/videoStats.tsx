@@ -116,7 +116,7 @@ const VideoStats: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-row py-1 rounded-lg w-full md:justify-end justify-evenly items-center">
+    <div className="flex flex-row py-1 rounded-lg w-full md:justify-end justify-evenly items-center gap-2">
       <div className="rounded-lg flex gap-3 items-center justify-center bg-none px-2 py-0.5">
         <motion.button
           whileTap={{ scale: 0.95 }}
@@ -128,7 +128,7 @@ const VideoStats: React.FC<Props> = ({
             <div className="p-1.5">
               <ThumbsUpIcon
                 className={`hover:text-gray-400 duration-200 ${
-                  isLiked ? "text-blue-500" : ""
+                  isLiked ? "text-primary" : ""
                 } ${likeVideoMutation.isPending ? "opacity-50" : ""}`}
               />
             </div>
@@ -195,16 +195,13 @@ const VideoStats: React.FC<Props> = ({
             bookmarkVideoMutation.isPending ? "opacity-50" : ""
           }`}
         />
-        <span className="md:hidden sm:hidden">Bookmark</span>
       </motion.button>
       <motion.button
-        // whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="rounded-lg flex gap-1 items-center justify-center bg-none p-2 px-3 hover:bg-muted transition duration-200"
+        className="rounded-lg flex gap-1 items-center justify-center bg-none p-2 px-2.5  hover:bg-muted transition duration-200"
         onClick={handlePlaylistClick}
       >
         <Playlist01Icon className="mt-0.5 h-5 w-5" />
-        <span className="text-md hidden md:block lg:hidden">Save</span>
       </motion.button>
       <PlaylistModal
         isOpen={isPlaylistModalOpen}

@@ -15,6 +15,7 @@ import {
   COMMENTS_QUERY_KEY,
   useChannelComments,
 } from "../hooks/getChannelComments";
+import { CommentSkeletonList } from "../skeleton/CommentSkeleton";
 
 interface CommentSectionProps {
   videoId: number;
@@ -69,8 +70,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ videoId, Owner }) => {
       replyToUsername: string;
     }) =>
       API.post(
-        `/
-      comment/videos/${videoId}/comments`,
+        `/comment/videos/${videoId}/comments`, // Remove any leading spaces here
         {
           content,
           parentId,
@@ -151,7 +151,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ videoId, Owner }) => {
               drag="y"
               dragControls={dragControls}
               dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={0.2}
+              dragElastic={0.1}
               dragMomentum={false}
               onDragEnd={handleDragEnd}
               initial={{ y: "100%" }}
@@ -190,14 +190,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ videoId, Owner }) => {
                   </svg>
                 </button>
               </div>
-              <div className="overflow-y-auto h-full pb-20">
+              <div className="overflow-y-auto h-full pb-20 overflow-y-auto-design1">
                 <div className="px-4 pt-4">
                   <CommentForm
                     onSubmit={(content) => addCommentMutation.mutate(content)}
                   />
                   {isLoading && (
                     <div className="text-muted-foreground">
-                      Loading comments...
+                       <CommentSkeletonList />
                     </div>
                   )}
                   {isError && (
@@ -241,7 +241,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ videoId, Owner }) => {
           onSubmit={(content) => addCommentMutation.mutate(content)}
         />
         {isLoading && (
-          <div className="text-muted-foreground">Loading comments...</div>
+          <div className="text-muted-foreground">  <CommentSkeletonList /></div>
         )}
         {isError && (
           <div className="text-destructive">Error loading comments</div>

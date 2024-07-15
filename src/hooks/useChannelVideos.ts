@@ -6,17 +6,17 @@ export const VIDEOS_QUERY_KEY = "channelVideos";
 export const useChannelVideos = (
   channelId: number,
   initialPage = 1,
-  limit = 2,
+  limit = 8,
   sortOrder: "newest" | "oldest"
 ) =>
   useInfiniteQuery({
-    queryKey: [VIDEOS_QUERY_KEY, limit, sortOrder],
+    queryKey: [VIDEOS_QUERY_KEY, channelId, limit, sortOrder],
     queryFn: ({ pageParam = initialPage }) =>
       getChannelVideos(channelId, pageParam, limit, sortOrder),
     getNextPageParam: (lastPage) =>
       lastPage.pagination.page < lastPage.pagination.totalPages
         ? lastPage.pagination.page + 1
         : undefined,
-
     initialPageParam: initialPage,
+    enabled: !!channelId 
   });

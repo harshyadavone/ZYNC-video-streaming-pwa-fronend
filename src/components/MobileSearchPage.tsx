@@ -16,10 +16,8 @@ interface Video {
 
 const MobileSearchPage: React.FC<MobileSearchPageProps> = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -27,23 +25,31 @@ const MobileSearchPage: React.FC<MobileSearchPageProps> = ({ onClose }) => {
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setSearchTerm(value);
-      setIsSearchOpen(value !== "");
+      setSearchTerm(e.target.value);
     },
     []
+  );
+
+  const handleSearch = useCallback(() => {
+    if (searchTerm.trim()) {
+      navigate(`/search/${encodeURIComponent(searchTerm.trim())}`);
+      onClose();
+    }
+  }, [searchTerm, navigate, onClose]);
+
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    },
+    [handleSearch]
   );
 
   const handleClearSearch = useCallback(() => {
     setSearchTerm("");
     inputRef.current?.focus();
   }, []);
-
-  const handleSearch = useCallback(() => {
-    if (searchTerm.trim()) {
-      setShouldRedirect(true);
-    }
-  }, [searchTerm]);
 
   const handleVoiceSearch = useCallback(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -74,13 +80,14 @@ const MobileSearchPage: React.FC<MobileSearchPageProps> = ({ onClose }) => {
       setSearchTerm(transcript);
       setIsModalOpen(false);
       setIsListening(false);
-      setShouldRedirect(true);
+      navigate(`/search/${encodeURIComponent(transcript.trim())}`);
+      onClose();
     };
 
     recognition.onerror = (event: any) => {
-      console.error(event.error, "error");
+      console.error(event.error);
       if (event.error !== "aborted") {
-        toast.error(event.error + "error");
+        toast.error(`Error: ${event.error}`);
       }
       setIsModalOpen(false);
       setIsListening(false);
@@ -93,18 +100,7 @@ const MobileSearchPage: React.FC<MobileSearchPageProps> = ({ onClose }) => {
     };
 
     recognition.start();
-  }, [handleSearch]);
-
-  useEffect(() => {
-    if (shouldRedirect && searchTerm.trim()) {
-      navigate(`/search/${encodeURIComponent(searchTerm.trim())}`);
-      onClose();
-    }
-  }, [shouldRedirect, searchTerm, navigate, onClose]);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+  }, [navigate, onClose]);
 
   const handleCloseModal = () => {
     if (recognitionRef.current) {
@@ -123,99 +119,95 @@ const MobileSearchPage: React.FC<MobileSearchPageProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-background z-50 flex flex-col">
-      <div className="flex items-center p-4 border-b border-border">
-        <button onClick={onClose} className="mr-4 text-muted-foreground">
+      <div className="flex items-center p-2 border-b border-gray-200 dark:border-gray-700">
+        <button
+          onClick={onClose}
+          className="mr-4 text-gray-600 dark:text-gray-400"
+        >
           <ArrowLeft size={24} />
         </button>
-        <div className="flex-grow flex items-center bg-card rounded-full shadow-sm">
+        <div className="flex-grow flex items-center bg-card rounded-full">
           <input
             ref={inputRef}
             type="text"
-            placeholder={isListening ? "Listening..." : "Search"}
+            placeholder={isListening ? "Listening..." : "Search YouTube"}
             value={searchTerm}
             onChange={handleInputChange}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleSearch();
-              }
-            }}
-            className="flex-grow px-4 py-2 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none"
+            onKeyPress={handleKeyPress}
+            className="flex-grow px-4 py-2 bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
           />
-          {searchTerm && (
+          {searchTerm ? (
             <button
               onClick={handleClearSearch}
-              className="p-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+              className="absolute right-2 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
             >
               <X size={18} />
             </button>
+          ) : (
+            <button
+              onClick={handleVoiceSearch}
+              className="absolute right-2 p-2 mr-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200"
+            >
+              <Mic size={20} />
+            </button>
           )}
         </div>
-        <button
-          onClick={handleSearch}
-          className="ml-4 text-muted-foreground hover:text-foreground transition-colors duration-200"
-        >
-          <Search size={24} />
-        </button>
       </div>
       <div className="flex-grow overflow-y-auto">
-        {isLoading && (
-          <div className="p-4 text-center text-muted-foreground">
-            Loading...
+        {isLoading ? (
+          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+            <div className="animate-pulse">Searching for "{searchTerm}"...</div>
           </div>
-        )}
-        {!isLoading && searchTerm && title && title.length === 0 && (
-          <div className="p-4 text-center text-muted-foreground">
-            No results found.
+        ) : searchTerm === "" ? (
+          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+            <Search size={48} className="mx-auto mb-4 opacity-50" />
+            <p className="text-lg font-medium">Search ZYNC</p>
+            <p className="text-sm mt-2">
+              Enter a search term to find videos, channels, and more
+            </p>
           </div>
-        )}
-        {!isLoading && isSearchOpen && title && title.length > 0 && (
-          <ul className="py-2">
-            {title.map((video: Video) => (
-              <li
-                key={video.id}
-                className="py-2 px-4 hover:bg-[#0f0f0f] transition-colors duration-200"
-              >
-                <Link
-                  to={`/search/${encodeURIComponent(video.title)}`}
-                  className="flex items-center gap-2"
-                  onClick={() => {
-                    setIsSearchOpen(false);
-                    setSearchTerm(video.title);
-                    onClose();
-                  }}
+        ) : !title || title.length === 0 ? (
+          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+            <Search size={48} className="mx-auto mb-4 opacity-50" />
+            <p className="text-lg font-medium">
+              No results found for "{searchTerm}"
+            </p>
+            <p className="text-sm mt-2">
+              Try different keywords or check your spelling
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="p-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+              Showing results for "{searchTerm}"
+            </div>
+            <ul className="py-2">
+              {title.map((video: Video) => (
+                <li
+                  key={video.id}
+                  className="py-2 px-4 hover:bg-card/50 transition-colors duration-200"
                 >
-                  <Search
-                    size={18}
-                    className="text-muted-foreground flex-shrink-0"
-                  />
-                  <span className="font-medium text-foreground truncate">
-                    {video.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  <Link
+                    to={`/search/${encodeURIComponent(video.title)}`}
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      setSearchTerm(video.title);
+                      onClose();
+                    }}
+                  >
+                    <Search
+                      size={18}
+                      className="text-gray-500 dark:text-gray-400 flex-shrink-0"
+                    />
+                    <span className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                      {video.title}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
-      </div>
-      <div className="p-4 border-t border-border">
-        <button
-          onClick={handleVoiceSearch}
-          className={`w-full py-2 flex items-center justify-center ${
-            isListening ? "bg-emerald-800" : "bg-accent"
-          } text-accent-foreground rounded-full hover:bg-accent/90 transition-all duration-200 ease-in-out hover:shadow-md relative overflow-hidden`}
-        >
-          <Mic
-            size={20}
-            className={`${isListening ? "text-white" : ""} mr-2 z-10`}
-          />
-          Search with your voice
-          {isListening && (
-            <span className="absolute inset-0 flex items-center justify-center">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full  opacity-75"></span>
-            </span>
-          )}
-        </button>
       </div>
       <VoiceSearchModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>

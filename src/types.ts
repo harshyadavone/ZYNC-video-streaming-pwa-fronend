@@ -60,7 +60,7 @@ export interface VideoDetails {
   tags: string[];
   channelId: number;
   ownerId: number;
-  polls: any[]; // You might want to create a proper type for polls if needed
+  polls: any[]; 
   channel: Channel;
 }
 

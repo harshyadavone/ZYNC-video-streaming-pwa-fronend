@@ -1,7 +1,8 @@
+import { Poll, PollCreationData } from "../components/videoDetail";
 import API from "../config/apiClient";
 import { WatchHistoryResponse } from "../hooks/useWatchHistory";
 import { GetPlaylistResponse } from "../pages/Playlistpage";
-import {  Video, VideoResponse } from "../types";
+import { Video, VideoResponse } from "../types";
 import { GetBookmarksResponse } from "../types/bookmarks";
 import { GetChannelVideosResponse } from "../types/channel";
 import { GetWatchHistoryResponse } from "../types/history";
@@ -15,8 +16,6 @@ export interface RegisterInput {
 }
 
 type loginInput = Pick<RegisterInput, "email" | "password">;
-
-
 
 export const register = async (data: RegisterInput) =>
   API.post("/auth/register", data);
@@ -100,16 +99,14 @@ export const getChannelVideos = async (
 
 export const getWatchHistory = async (
   page?: number,
-  limit?: number,
+  limit?: number
 ): Promise<GetWatchHistoryResponse> => {
-  return API.get(
-    `/history/watchHistory?page=${page}&limit=${limit}`
-  );
+  return API.get(`/history/watchHistory?page=${page}&limit=${limit}`);
 };
 
 export const getPrivatePlaylists = async (
   page?: number,
-  limit?: number,
+  limit?: number
 ): Promise<GetPlaylistsResponse> => {
   return API.get(
     `/playlist/users/private-playlists?page=${page}&limit=${limit}`
@@ -118,17 +115,22 @@ export const getPrivatePlaylists = async (
 
 export const getBookmarks = async (
   page?: number,
-  limit?: number,
+  limit?: number
 ): Promise<GetBookmarksResponse> => {
-  return API.get(
-    `bookmark/bookmarks?page=${page}&limit=${limit}`
-  );
+  return API.get(`bookmark/bookmarks?page=${page}&limit=${limit}`);
+};
+
+export const getMySubscriptions = async (
+  page?: number,
+  limit?: number
+): Promise<any> => {
+  return API.get(`subscription/my-subscriptions?page=${page}&limit=${limit}`);
 };
 
 export const getChannelPlaylists = async (
   channelId: string,
   page?: number,
-  limit?: number,
+  limit?: number
 ): Promise<GetPlaylistsResponse> => {
   return API.get(
     `/playlist//channels/${channelId}/playlists?page=${page}&limit=${limit}`
@@ -137,7 +139,7 @@ export const getChannelPlaylists = async (
 export const getPlaylistById = async (
   playlistId: string,
   page?: number,
-  limit?: number,
+  limit?: number
 ): Promise<GetPlaylistResponse> => {
   return API.get(
     `/playlist/playlists/${playlistId}?age=${page}&limit=${limit}`
@@ -155,7 +157,12 @@ export const getChannelComments = async (
 // Polls
 export const createPoll = (
   videoId: number,
-  pollData: { question: string; options: string[] }
-) => API.post(`/video/videos/${videoId}/polls`, pollData);
-export const votePoll = (videoId: number, pollId: number, optionId: number) =>
+  pollData: PollCreationData
+): Promise<Poll> => API.post(`/video/videos/${videoId}/polls`, pollData);
+
+export const votePoll = (
+  videoId: number,
+  pollId: number,
+  optionId: number
+): Promise<void> =>
   API.post(`/video/videos/${videoId}/polls/${pollId}/vote`, { optionId });

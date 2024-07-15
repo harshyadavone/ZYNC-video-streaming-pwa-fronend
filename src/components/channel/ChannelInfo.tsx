@@ -61,6 +61,7 @@ const ChannelInfo = ({channel, isVerified} : Props) => {
               <Button
                 variant="outline"
                 size="sm"
+                disabled
                 onClick={handleShare}
                 aria-label="Share channel"
               >
@@ -75,6 +76,7 @@ const ChannelInfo = ({channel, isVerified} : Props) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+              disabled
                 variant="outline"
                 size="sm"
                 onClick={handleNotify}
@@ -88,7 +90,7 @@ const ChannelInfo = ({channel, isVerified} : Props) => {
               <p>Get notified about new videos</p>
             </TooltipContent>
           </Tooltip>
-          <Button size="sm" onClick={handleSubscribe}>
+          <Button size="sm" onClick={handleSubscribe} disabled className="disabled:cursor-not-allowed">
             Subscribe
           </Button>
         </div>

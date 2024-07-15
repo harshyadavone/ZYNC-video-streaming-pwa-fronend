@@ -12,7 +12,7 @@ import { useState } from "react";
 
 export const VIDEOS_QUERY_KEY = "videos";
 
-export const useVideos = (initialPage = 1, limit = 2) =>
+export const useVideos = (initialPage = 1, limit = 8) =>
   useInfiniteQuery({
     queryKey: [VIDEOS_QUERY_KEY, limit],
     queryFn: ({ pageParam = initialPage }) => getVideos(pageParam, limit),
@@ -38,7 +38,7 @@ const RELATED_VIDEOS_QUERY_KEY = "relatedVideos";
 export const useRelatedVideos = (
   videoId: string,
   initialPage = 1,
-  limit = 1
+  limit = 10
 ): UseInfiniteQueryResult<InfiniteData<VideoResponse, number>, Error> =>
   useInfiniteQuery({
     queryKey: [RELATED_VIDEOS_QUERY_KEY, videoId, limit] as const,
@@ -84,7 +84,6 @@ export default useTrendingVideos;
 export const useVideoUpload = () => {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-
   const mutation = useMutation({
     mutationFn: async ({
       channelId,

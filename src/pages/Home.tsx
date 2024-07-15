@@ -47,7 +47,6 @@ const Home: React.FC = () => {
         {allVideos.length === 0 && isLoading ? (
           <div className="w-full">
             <VideoSkeleton grid="4" />
-            loading
           </div>
         ) : allVideos.length === 0 ? (
           <p className="text-center text-xl text-muted-foreground">

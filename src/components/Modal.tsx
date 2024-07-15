@@ -45,7 +45,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
               damping: 30,
               mass: 0.8
             }}
-            className="bg-card text-card-foreground rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            className="bg-card text-card-foreground rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto "
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">

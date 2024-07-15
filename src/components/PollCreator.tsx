@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface PollCreatorProps {
@@ -11,6 +11,7 @@ interface PollCreatorProps {
 const PollCreator: React.FC<PollCreatorProps> = ({ onCreatePoll, onClose }) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddOption = () => {
     if (options.length < 4) {
@@ -34,7 +35,7 @@ const PollCreator: React.FC<PollCreatorProps> = ({ onCreatePoll, onClose }) => {
     setOptions(newOptions);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const filteredOptions = options.filter((option) => option.trim() !== "");
     if (!question.trim()) {
@@ -45,11 +46,21 @@ const PollCreator: React.FC<PollCreatorProps> = ({ onCreatePoll, onClose }) => {
       toast.error("Please provide at least two options.");
       return;
     }
-    onCreatePoll({
-      question,
-      options: filteredOptions,
-    });
-    onClose();
+
+    setIsLoading(true);
+    try {
+      await onCreatePoll({
+        question,
+        options: filteredOptions,
+      });
+      onClose();
+    } catch (error) {
+      console.error("Failed to create poll:", error);
+      toast.error("Failed to create poll. Please try again.");
+    } finally {
+      setIsLoading(false);
+      toast.success("Poll created.");
+    }
   };
 
   return (
@@ -100,10 +111,18 @@ const PollCreator: React.FC<PollCreatorProps> = ({ onCreatePoll, onClose }) => {
           Add Option
         </Button>
         <button
-            type="submit"
-        className="max-w-[250px] bg-primary/70 rounded-lg text-white/90 font-medium  p-2 px-8 "
+          type="submit"
+          className="max-w-[250px] bg-primary/70 rounded-lg text-white/90 font-medium p-2 px-8 flex items-center justify-center"
+          disabled={isLoading}
         >
-            Create Poll
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            "Create Poll"
+          )}
         </button>
       </div>
     </form>

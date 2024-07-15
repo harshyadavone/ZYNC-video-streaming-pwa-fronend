@@ -8,16 +8,16 @@ import { Edit, Info, List, MoreVertical, Play, Trash2 } from "lucide-react";
 import { timeAgo } from "../lib/formatters";
 import { PlaylistVideoCard } from "../components/playlists/PlaylistCard";
 import TabNavigation from "../components/my-channel/TabNavigation";
-import { useDeletePlaylist, useUpdatePlaylist } from "../hooks/playlistsHooks";
+import { useDeletePlaylist } from "../hooks/playlistsHooks";
 import Modal from "../components/Modal";
 import { toast } from "sonner";
-import CreatePrivatePlaylistModal from "../components/playlists/CreatePrivatePlaylistModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
+import PlaylistModal from "../components/createPlaylist";
 
 type Owner = {
   avatar: string;
@@ -65,7 +65,6 @@ const PlaylistPage = () => {
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useGetPlaylistById(1, 10, playlistId!);
   const { mutate: deletePlaylist, isPending: isDeleting } = useDeletePlaylist();
-  const { mutate: updatePlaylist } = useUpdatePlaylist(playlistId!);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -86,16 +85,6 @@ const PlaylistPage = () => {
   if (isDeleting) {
     toast.loading("Deleting the Playlist");
   }
-
-  const handleUpdatePlaylist = async (playlistData: any) => {
-    try {
-      updatePlaylist(playlistData);
-      toast.success("Playlist updated successfully");
-      setIsModalOpen(false);
-    } catch (error) {
-      toast.error("Failed to update playlist");
-    }
-  };
 
   if (isLoading) {
     return <PlaylistSkeleton />;
@@ -202,12 +191,15 @@ const PlaylistPage = () => {
                   </button>
                 </div>
               </Modal>
-              <CreatePrivatePlaylistModal
+              <PlaylistModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                // videoId={null} // We're not adding a video
-                onSubmit={handleUpdatePlaylist}
-                isUpdating
+                playlistToUpdate={{
+                  id: playlist.id,
+                  name: playlist.name,
+                  description: playlist.description,
+                  privacy: playlist.privacy,
+                }}
               />
             </div>
           </div>

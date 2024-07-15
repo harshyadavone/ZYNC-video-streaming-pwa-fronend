@@ -1,4 +1,4 @@
-import {useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,15 +6,22 @@ import { Edit, Info, List, MoreVertical, Play, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Video } from "../../types/channel";
 import { useGetPlaylistById } from "../../hooks/playlists/useGetPlaylistById";
-import { useDeletePlaylist, useUpdatePlaylist } from "../../hooks/playlistsHooks";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  useDeletePlaylist,
+  useUpdatePlaylist,
+} from "../../hooks/playlistsHooks";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import Modal from "../Modal";
 import CreatePrivatePlaylistModal from "./CreatePrivatePlaylistModal";
 import TabNavigation from "../my-channel/TabNavigation";
 import { timeAgo } from "../../lib/formatters";
 import useAuth from "../../hooks/useAuth";
 import { ChannelPlaylistVideoCard } from "./ChannelPlaylistVideoCard";
-
 
 type Owner = {
   avatar: string;
@@ -55,17 +62,16 @@ const ChannelPlaylistPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("Videos");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {channelId} = useParams()
+  const { channelId } = useParams();
   const tabs = ["Videos", "info"];
-const {user} = useAuth()
-const isOwner = channelId == user?.channels.map(channel => channel?.id || false) || false;
-
- 
+  const { user } = useAuth();
+  const isOwner =
+    channelId == user?.channels.map((channel) => channel?.id || false) || false;
 
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useGetPlaylistById(1, 10, playlistId!);
-  const { mutate: deletePlaylist, } = useDeletePlaylist();
-  const { mutate: updatePlaylist } = useUpdatePlaylist(playlistId!);
+  const { mutate: deletePlaylist } = useDeletePlaylist();
+  const { mutate: updatePlaylist } = useUpdatePlaylist(parseInt(playlistId!));
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -80,7 +86,7 @@ const isOwner = channelId == user?.channels.map(channel => channel?.id || false)
     deletePlaylist(playlistId!);
     setShowDeleteModal(false);
     toast.success("Playlist Deleted");
-    history.back()
+    history.back();
   };
 
   const handleUpdatePlaylist = async (playlistData: any) => {
@@ -147,32 +153,34 @@ const isOwner = channelId == user?.channels.map(channel => channel?.id || false)
                   <List className="mr-2" /> Shuffle
                 </button>
                 <div className="flex-shrink-0">
-                  {isOwner && <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="p-2  rounded-full bg-muted/50 hover:bg-muted ">
-                        <MoreVertical className="w-5 h-5 text-white p-0.5" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="w-56  text-white border-solid"
-                    >
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => setIsModalOpen(true)}
+                  {isOwner && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="p-2  rounded-full bg-muted/50 hover:bg-muted ">
+                          <MoreVertical className="w-5 h-5 text-white p-0.5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-56  text-white border-solid"
                       >
-                        <Edit className="mr-2 h-4 w-4" />
-                        <span>Update Playlist</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-red-600 hover:text-red-800 cursor-pointer"
-                        onClick={handleDelete}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Delete Playlist</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>}
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => setIsModalOpen(true)}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          <span>Update Playlist</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-red-600 hover:text-red-800 cursor-pointer"
+                          onClick={handleDelete}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Delete Playlist</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               </div>
               <Modal

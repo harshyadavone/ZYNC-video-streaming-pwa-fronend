@@ -27,8 +27,8 @@ const mockData = [
 const SuggestionBar: React.FC = () => {
   return (
     <div className="relative">
-      <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0f0f0f] to-transparent z-999 pointer-events-none "></div>
-      <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0f0f0f] to-transparent pointer-events-none z-10"></div>
+      <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
       <div className="flex space-x-3 overflow-x-scroll mb-4 py-2 px-2 no-scrollbar ">
         {mockData.map((suggestion) => (
           <button

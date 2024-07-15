@@ -202,7 +202,7 @@ const Settings = () => {
                 <Textarea
                   value={editedBio}
                   onChange={(e) => setEditedBio(e.target.value)}
-                  className="mt-4 w-full resize-none overflow-y-auto rounded-lg focus-visible:ring-0 focus-visible:outline-none"
+                  className="mt-4 w-full resize-none overflow-y-auto rounded-lg focus-visible:ring-0 focus-visible:outline-none "
                   placeholder="Enter your bio..."
                   rows={4}
                 />

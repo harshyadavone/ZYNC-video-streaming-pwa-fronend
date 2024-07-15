@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Loader from "../Loader";
 import { formatViews, timeAgo } from "../../lib/formatters";
 import LazyImage from "../LazyImage";
+import RelatedVideoSkeleton from "../../skeleton/RelatedVideoSkeleton";
 
 const RelatedVideos: React.FC = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -29,7 +30,11 @@ const RelatedVideos: React.FC = () => {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
-    return <div></div>;
+    return (
+      <div>
+        <RelatedVideoSkeleton />
+      </div>
+    );
   }
 
   if (isError) {
@@ -60,7 +65,7 @@ const RelatedVideos: React.FC = () => {
                 <LazyImage
                   alt={video.title}
                   src={video.thumbnail}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  className="w-full h-full  object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
               <div className="flex-1">

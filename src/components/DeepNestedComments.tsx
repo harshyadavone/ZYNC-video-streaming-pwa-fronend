@@ -329,7 +329,7 @@ const CommentComponent: React.FC<CommentProps> = ({
 const DeepNestedComments: React.FC<CommentProps> = (props) => {
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-card text-card-foreground rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-card text-card-foreground rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-aut overflow-y-auto-design1o">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Continued Thread</h2>
           <button

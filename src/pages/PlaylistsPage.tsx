@@ -82,8 +82,8 @@ const PlaylistsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-black/10">
-        <Loader2 sizeInPixels="60px"/>
+      <div className="flex flex-col w-screen h-screen items-center justify-center text-primary">
+        <Loader2 />
       </div>
     );
   }
@@ -92,7 +92,7 @@ const PlaylistsPage = () => {
     <div className="min-h-screen text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Your Playlists</h1>
+          <h1 className="text-2xl font-medium">Your Playlists</h1>
           <button
             onClick={() => setIsModalOpen(true)}
             className="text-white px-4 py-2 rounded-md border flex items-center gap-2 hover:bg-muted transition-colors"

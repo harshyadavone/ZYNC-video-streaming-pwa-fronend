@@ -5,6 +5,7 @@ import TabNavigation from "../components/my-channel/TabNavigation";
 import { useState } from "react";
 import ChannelVideoTab from "../components/channel/ChannelVideoTab";
 import PlaylistsTab from "../components/PlaylistTab";
+import { Loader2 } from 'lucide-react';
 
 const ChannelPage = () => {
   const [activeTab, setActiveTab] = useState("Videos");
@@ -15,7 +16,11 @@ const ChannelPage = () => {
   if (!channelId) return <div>No Channel Id</div>;
   const { data: channelData, status } = useChannel(channelId);
   if (status === "pending") {
-    return <div>Loading...</div>;
+    return <div className="flex flex-col items-center justify-center w-full h-full text-primary/80"> 
+              <Loader2 className="mr-2 mb-4 h-8 w-8 animate-spin " />
+
+    Loading...
+    </div>;
   }
   if (!channelData) {
     return <div>No Channel Found</div>;

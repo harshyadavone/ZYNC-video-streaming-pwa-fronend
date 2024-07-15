@@ -10,7 +10,7 @@ type Props = {
 
 // src\assets\react.svg
 
-const fallbackImage = "/src/assets/react.svg"; // TODO: Replace with actual path
+const fallbackImage = "/pwa-512x512.png"; // TODO: Replace fallback image
 
 const ChannelHeader: React.FC<Props> = ({ channel, isVerified = false }) => {
   const [bannerLoaded, setBannerLoaded] = useState(false);
