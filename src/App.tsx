@@ -26,7 +26,6 @@ import ChannelPlaylistPage from "./components/playlists/ChannelPlaylist";
 import BookmarkPage from "./pages/BookmarkPage";
 import MySubscriptionsPage from "./pages/MySubscriptionsPage";
 import OfflinePage from "./pages/OfflinePage";
-import NetworkStatus from "./pages/NetworkStatus";
 
 function App() {
   // set the navigate function on our API client for use in the axios error interceptor
@@ -36,7 +35,6 @@ function App() {
   setNavigate(navigate);
   return (
     <>
-      <NetworkStatus />
       <Routes>
         <Route path="/" element={<AppContainer />}>
           <Route index element={<Home />} />
