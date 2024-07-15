@@ -34,7 +34,7 @@ import {
   VolumeHighIcon,
   VolumeOffIcon,
 } from "../ui/Icons";
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 type NewType = {
   src: string;
@@ -52,6 +52,8 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
     ref
   ): JSX.Element => {
     const playerRef = useRef<HTMLDivElement | null>(null);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
 
     function onProviderChange(provider: any) {
       if (isHLSProvider(provider)) {
@@ -86,29 +88,36 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
     useEffect(() => {
       const player = playerRef.current;
       if (player) {
+        const settingsButton = player.querySelector('.plyr__control--settings') as HTMLElement;
         const settingsMenu = player.querySelector('.plyr__menu__container') as HTMLElement;
-        if (settingsMenu) {
-          const handleWheel = (e: WheelEvent) => {
-            const { currentTarget, deltaY } = e;
-            const target = currentTarget as HTMLElement;
-            
-            if (
-              (deltaY < 0 && target.scrollTop === 0) ||
-              (deltaY > 0 && target.scrollHeight - target.clientHeight === target.scrollTop)
-            ) {
-              e.preventDefault();
-            }
+
+        if (settingsButton && settingsMenu) {
+          const handleSettingsToggle = () => {
+            setIsSettingsOpen(prev => !prev);
           };
-          
-          settingsMenu.addEventListener('wheel', handleWheel, { passive: false });
-    
+
+          settingsButton.addEventListener('click', handleSettingsToggle);
+
           // Cleanup function
           return () => {
-            settingsMenu.removeEventListener('wheel', handleWheel);
+            settingsButton.removeEventListener('click', handleSettingsToggle);
           };
         }
       }
     }, []);
+
+    useEffect(() => {
+      if (isSettingsOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }, [isSettingsOpen]);
+
 
     return (
       <div className="custom-video-player" ref={playerRef}>
