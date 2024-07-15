@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -9,22 +9,10 @@ import { ThemeProvider } from "./components/theme-provider.tsx";
 import { Provider } from "react-redux";
 import store from "./store/store.ts";
 import { Toaster } from "./components/ui/sonner.tsx";
+import { useOnlineStatus } from "./lib/useOnlineStatus.ts";
 
 const MainApp = () => {
-  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
+  const isOnline = useOnlineStatus();
 
   return (
     <React.StrictMode>
