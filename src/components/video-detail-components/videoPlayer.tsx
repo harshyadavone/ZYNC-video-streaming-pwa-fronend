@@ -86,14 +86,22 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
     useEffect(() => {
       const player = playerRef.current;
       if (player) {
-        const settingsMenu = player.querySelector('.plyr__menu') as HTMLElement;
+        const settingsMenu = player.querySelector('.plyr__menu__container') as HTMLElement;
         if (settingsMenu) {
           const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
+            const { currentTarget, deltaY } = e;
+            const target = currentTarget as HTMLElement;
+            
+            if (
+              (deltaY < 0 && target.scrollTop === 0) ||
+              (deltaY > 0 && target.scrollHeight - target.clientHeight === target.scrollTop)
+            ) {
+              e.preventDefault();
+            }
           };
+          
           settingsMenu.addEventListener('wheel', handleWheel, { passive: false });
-
+    
           // Cleanup function
           return () => {
             settingsMenu.removeEventListener('wheel', handleWheel);
