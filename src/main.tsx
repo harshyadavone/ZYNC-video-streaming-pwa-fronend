@@ -1,19 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import App from "./App";
 import "./index.css";
 import { QueryClientProvider } from "@tanstack/react-query";
-import queryClient from "./config/queryClient.ts";
+import queryClient from "./config/queryClient";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "./components/theme-provider.tsx";
+import { ThemeProvider } from "./components/theme-provider";
 import { Provider } from "react-redux";
-import store from "./store/store.ts";
-import { Toaster } from "./components/ui/sonner.tsx";
-import { useOnlineStatus } from "./lib/useOnlineStatus.ts";
+import store from "./store/store";
+import { Toaster } from "./components/ui/sonner";
 
 const MainApp = () => {
-  const isOnline = useOnlineStatus();
-
   return (
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
@@ -22,11 +19,6 @@ const MainApp = () => {
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
               <App />
               <Toaster position="top-right" theme="dark" />
-              {!isOnline && (
-                <div className="offline-message">
-                  You are currently offline. Some features may be limited.
-                </div>
-              )}
             </ThemeProvider>
           </BrowserRouter>
         </Provider>
@@ -35,14 +27,13 @@ const MainApp = () => {
   );
 };
 
-// Render the application using ReactDOM.createRoot (React 18+ feature)
 ReactDOM.createRoot(document.getElementById("root")!).render(<MainApp />);
 
-// Add service worker registration
+// Register service worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/registerSW.js")
+      .register("/sw.js")
       .then((registration) => {
         console.log("Service Worker registered: ", registration);
       })

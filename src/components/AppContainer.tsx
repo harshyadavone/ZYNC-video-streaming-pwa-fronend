@@ -16,7 +16,7 @@ const AppContainer: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col w-screen h-screen items-center justify-center text-primary">
+      <div className="flex flex-col w-full h-screen items-center justify-center text-primary">
           <Loader2 className="mr-2 mb-4 h-8 w-8 animate-spin " />
           Loading... <ZyncLogo/>
       </div>

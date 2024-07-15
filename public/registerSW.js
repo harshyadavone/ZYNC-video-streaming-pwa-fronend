@@ -72,3 +72,23 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request);
+      })
+    );
+  });
+  
+  // Handle offline/online events
+  self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'OFFLINE') {
+      // Handle offline state
+      console.log('App is offline');
+    } else if (event.data && event.data.type === 'ONLINE') {
+      // Handle online state
+      console.log('App is online');
+    }
+  });
+  

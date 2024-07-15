@@ -1,6 +1,5 @@
 import axios from "axios";
 import queryClient from "./queryClient";
-
 import { UNAUTHORIZED } from "../constants/http.mts";
 import { navigate } from "../lib/navigation";
 import store from "../store/store";
@@ -22,9 +21,25 @@ TokenRefreshClient.interceptors.response.use((response) => response.data);
 
 const API = axios.create(options);
 
+// Add request interceptor to handle offline scenarios
+API.interceptors.request.use(
+  (config) => {
+    if (!navigator.onLine) {
+      return Promise.reject({ status: 'OFFLINE', message: 'No internet connection' });
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 API.interceptors.response.use(
   (response) => response.data,
   async (error) => {
+    // Check if the error is due to being offline
+    if (!navigator.onLine) {
+      return Promise.reject({ status: 'OFFLINE', message: 'No internet connection' });
+    }
+
     const { config, response } = error;
     const { status, data } = response || {};
 
@@ -38,7 +53,7 @@ API.interceptors.response.use(
         // handle refresh errors by clearing the query cache & redirecting to login
         queryClient.clear();
         dispatchClearUser();
-        //@ts-ignore
+        // @ts-ignore
         navigate("/login", {
           state: {
             redirectUrl: window.location.pathname,
