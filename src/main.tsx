@@ -9,6 +9,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import { Toaster } from "./components/ui/sonner";
+import { registerSw } from "./lib/sw";
 
 const MainApp = () => {
   return (
@@ -28,6 +29,9 @@ const MainApp = () => {
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(<MainApp />);
+
+//
+registerSw();
 
 // Register service worker
 if ("serviceWorker" in navigator) {

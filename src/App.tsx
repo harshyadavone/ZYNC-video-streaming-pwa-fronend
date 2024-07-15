@@ -26,6 +26,7 @@ import ChannelPlaylistPage from "./components/playlists/ChannelPlaylist";
 import BookmarkPage from "./pages/BookmarkPage";
 import MySubscriptionsPage from "./pages/MySubscriptionsPage";
 import OfflinePage from "./pages/OfflinePage";
+import NetworkStatus from "./pages/NetworkStatus";
 
 function App() {
   // set the navigate function on our API client for use in the axios error interceptor
@@ -34,38 +35,44 @@ function App() {
   //@ts-ignore
   setNavigate(navigate);
   return (
-    <Routes>
-      <Route path="/" element={<AppContainer />}>
-        <Route index element={<Home />} />
-        <Route path="/video/:videoId" Component={VideoDetailspage} />
-        <Route path="/trending" Component={TrendingVideos} />
-        <Route path="/my-channel" Component={MyChannel} />
-        <Route path="/channel/:channelId" element={<ChannelPage />} />
-        <Route path="/channel/:channelId/playlists/:playlistId" Component={ChannelPlaylistPage}/>
-        
-        <Route path="/history" Component={WatchHistory} />
-        <Route path="/bookmark" element={<BookmarkPage/>} />
-        <Route path="/playlists" Component={PlaylistsPage} />
-        <Route path="/playlist/:playlistId" Component={Playlistpage} />
-        <Route path="/my-channel/:channelId/upload" Component={UploadPage} />
-        <Route path="/search/:query" element={<SearchResults />} />
-        <Route path="/subscriptions" element={<MySubscriptionsPage />} />
-        <Route path="settings" element={<Settings />}>
-          <Route index element={<OtherSettings />} />
-          <Route path="/settings/account" element={<Account />} />
-          <Route path="/settings/notificatin" element={<Notification />} />
-          <Route path="/settings/session" element={<Sessions />} />
+    <>
+      <NetworkStatus />
+      <Routes>
+        <Route path="/" element={<AppContainer />}>
+          <Route index element={<Home />} />
+          <Route path="/video/:videoId" Component={VideoDetailspage} />
+          <Route path="/trending" Component={TrendingVideos} />
+          <Route path="/my-channel" Component={MyChannel} />
+          <Route path="/channel/:channelId" element={<ChannelPage />} />
+          <Route
+            path="/channel/:channelId/playlists/:playlistId"
+            Component={ChannelPlaylistPage}
+          />
+
+          <Route path="/history" Component={WatchHistory} />
+          <Route path="/bookmark" element={<BookmarkPage />} />
+          <Route path="/playlists" Component={PlaylistsPage} />
+          <Route path="/playlist/:playlistId" Component={Playlistpage} />
+          <Route path="/my-channel/:channelId/upload" Component={UploadPage} />
+          <Route path="/search/:query" element={<SearchResults />} />
+          <Route path="/subscriptions" element={<MySubscriptionsPage />} />
+          <Route path="settings" element={<Settings />}>
+            <Route index element={<OtherSettings />} />
+            <Route path="/settings/account" element={<Account />} />
+            <Route path="/settings/notificatin" element={<Notification />} />
+            <Route path="/settings/session" element={<Sessions />} />
+          </Route>
         </Route>
-      </Route>
-      <Route path="/" element={<Auth />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Route>
-      <Route path="/email/verify/:code" element={<VerifyEmail />} />
-      <Route path="/password/forgot" element={<ForgotPassword />} />
-      <Route path="/password/reset" element={<ResetPassword />} />
-      <Route path="/" element={!navigator.onLine ? <OfflinePage /> : <AppContainer />} />
-    </Routes>
+        <Route path="/" element={<Auth />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+        <Route path="/email/verify/:code" element={<VerifyEmail />} />
+        <Route path="/password/forgot" element={<ForgotPassword />} />
+        <Route path="/password/reset" element={<ResetPassword />} />
+        <Route path="/offline" element={<OfflinePage />} />
+      </Routes>
+    </>
   );
 }
 
