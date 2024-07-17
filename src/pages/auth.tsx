@@ -5,7 +5,7 @@ import { RootState } from "../store/store";
 const Auth = () => {
   const user = useSelector((state: RootState) => state.user.user);
   // @ts-ignore
-  if (user?.isAuthenticated) {
+  if (!user?.isAuthenticated) {
     return <Navigate to={"/"} />;
   }
   const params = useLocation();
