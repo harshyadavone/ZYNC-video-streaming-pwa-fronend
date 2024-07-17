@@ -12,7 +12,7 @@ export default defineConfig({
         name: "ZYNC",
         short_name: "ZYNC",
         description: "Video Streaming App",
-        theme_color: "#16a34a",
+        theme_color: "#141414",
         id: "ZYNC",
         dir: "ltr",
         orientation: "any",
