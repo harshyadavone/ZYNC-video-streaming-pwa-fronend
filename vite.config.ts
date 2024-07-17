@@ -17,6 +17,7 @@ export default defineConfig({
         dir: "ltr",
         orientation: "any",
         display: "standalone",
+        display_override: ["window-controls-overlay", "standalone"],
         start_url: "/",
         background_color: "#141414",
         lang: "en",
