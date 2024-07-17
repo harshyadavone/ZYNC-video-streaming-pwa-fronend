@@ -25,6 +25,7 @@ import {
 } from "../../hooks/useVideostats";
 import PlaylistModal from "../PlaylistModal";
 import useAuth from "../../hooks/useAuth";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   videoId: number;
@@ -38,10 +39,10 @@ const VideoStats: React.FC<Props> = ({
   dislikes: initialDislikes,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const {user} = useAuth()
+  const { user } = useAuth();
   const userId = user?.id;
-  if(!userId){
-    return <div>Log in</div>
+  if (!userId) {
+    return <div>Log in</div>;
   }
   const isLiked = useSelector((state: RootState) =>
     selectIsVideoLiked(state, videoId, userId)
@@ -126,11 +127,15 @@ const VideoStats: React.FC<Props> = ({
         >
           <div className="flex items-center justify-center">
             <div className="p-1.5">
-              <ThumbsUpIcon
-                className={`hover:text-gray-400 duration-200 ${
-                  isLiked ? "text-primary" : ""
-                } ${likeVideoMutation.isPending ? "opacity-50" : ""}`}
-              />
+              {likeVideoMutation.isPending ? (
+                <Loader2 className=" h-5 w-5 animate-spin" />
+              ) : (
+                <ThumbsUpIcon
+                  className={`hover:text-gray-400 duration-200 ${
+                    isLiked ? "text-primary" : ""
+                  } ${likeVideoMutation.isPending ? "opacity-50" : ""}`}
+                />
+              )}
             </div>
             <div className="w-8 text-center">
               {" "}
@@ -150,18 +155,22 @@ const VideoStats: React.FC<Props> = ({
           </div>
         </motion.button>
         <motion.button
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.98 }}
           className="flex items-center md:mb-0"
           onClick={handleDislike}
           disabled={dislikeVideoMutation.isPending}
         >
           <div className="flex items-center justify-center">
             <div className="p-1.5">
-              <ThumbsDownIcon
-                className={`hover:text-gray-400 duration-200 ${
-                  isDisliked ? "text-red-500" : ""
-                } ${dislikeVideoMutation.isPending ? "opacity-50" : ""}`}
-              />
+              {dislikeVideoMutation.isPending ? (
+                <Loader2 className=" h-5 w-5 animate-spin" />
+              ) : (
+                <ThumbsDownIcon
+                  className={`hover:text-gray-400 duration-200 ${
+                    isDisliked ? "text-red-500" : ""
+                  } ${dislikeVideoMutation.isPending ? "opacity-50" : ""}`}
+                />
+              )}
             </div>
             <div className="w-8 text-center">
               {" "}
@@ -188,13 +197,17 @@ const VideoStats: React.FC<Props> = ({
         onClick={handleBookmark}
         disabled={bookmarkVideoMutation.isPending}
       >
-        <Bookmark02Icon
-          height={"22"}
-          width={"22"}
-          className={`${isBookmarked ? "text-yellow-500" : ""} ${
-            bookmarkVideoMutation.isPending ? "opacity-50" : ""
-          }`}
-        />
+        {bookmarkVideoMutation.isPending ? (
+          <Loader2 className=" h-5 w-5 animate-spin text-yellow-500" />
+        ) : (
+          <Bookmark02Icon
+            height={"22"}
+            width={"22"}
+            className={`${isBookmarked ? "text-yellow-500" : ""} ${
+              bookmarkVideoMutation.isPending ? "opacity-50" : ""
+            }`}
+          />
+        )}
       </motion.button>
       <motion.button
         whileTap={{ scale: 0.95 }}

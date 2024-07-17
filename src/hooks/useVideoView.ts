@@ -16,7 +16,7 @@ const useVideoView = (videoId: number) => {
   const logViewMutation = useMutation({
     mutationFn: logVideoView,
     onSuccess: () => {
-      console.log("View logged successfully");
+      // console.log("View logged successfully");
     },
     onError: (error) => {
       console.error("Error logging view:", error);

@@ -30,9 +30,12 @@ const VideoTab: React.FC<{ channelId: number }> = ({ channelId }) => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-
   if (isLoading) {
-    return <div className="px-4"><VideoSkeleton grid="3" /></div>;
+    return (
+      <div className="px-4">
+        <VideoSkeleton grid="3" />
+      </div>
+    );
   }
 
   if (isError) {
@@ -54,7 +57,7 @@ const VideoTab: React.FC<{ channelId: number }> = ({ channelId }) => {
           <option value="oldest">Sort by Oldest</option>
         </select>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 max-h-full">
         {videos.map((video) => (
           <div
             key={video.id}
@@ -79,7 +82,7 @@ const VideoTab: React.FC<{ channelId: number }> = ({ channelId }) => {
               <p className="text-muted-foreground text-sm">
                 {video.commentsCount} comments
               </p>
-               </div>
+            </div>
           </div>
         ))}
       </div>

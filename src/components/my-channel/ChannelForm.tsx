@@ -5,8 +5,11 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription  } from '../ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 interface ChannelFormProps {
+  // TODO: make this necessary field
+  isSubmitting?: boolean;
   isOpen: boolean;
   title: string;
   editForm: {
@@ -30,6 +33,7 @@ const ChannelForm: React.FC<ChannelFormProps> = ({
   onSubmit,
   onInputChange,
   onFileChange,
+  isSubmitting,
 }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
     <DialogContent>
@@ -39,6 +43,7 @@ const ChannelForm: React.FC<ChannelFormProps> = ({
           {title === 'Update Channel' ? 'Make changes to your channel here.' : 'Create your new channel here.'} Click save when you're done.
         </DialogDescription>
       </DialogHeader>
+      
       <form onSubmit={onSubmit}>
         <div className="mb-4 ">
           <label htmlFor="name" className="block text-sm font-medium">Channel Name</label>
@@ -60,7 +65,16 @@ const ChannelForm: React.FC<ChannelFormProps> = ({
           <label htmlFor="bannerImage" className="block text-sm font-medium">Banner Image</label>
           <Input id="bannerImage" name="bannerImage" type="file" onChange={onFileChange} className="mt-1 block w-full" />
         </div>
-        <Button type="submit" className="w-full">{title === 'Update Channel' ? 'Save Changes' : 'Create Channel'}</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {title === 'Update Channel' ? 'Saving Changes...' : 'Creating Channel...'}
+            </>
+          ) : (
+            title === 'Update Channel' ? 'Save Changes' : 'Create Channel'
+          )}
+        </Button>
       </form>
     </DialogContent>
   </Dialog>

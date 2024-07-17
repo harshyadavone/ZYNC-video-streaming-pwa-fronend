@@ -201,7 +201,7 @@ const VideoCard: React.FC<{ video: VideoTypeResult }> = memo(({ video }) => {
       </Link>
       <div className="mt-2 sm:mt-0 sm:ml-4">
         <Link to={`/video/${video.id}`}>
-          <h2 className="text-lg font-semibold text-foreground line-clamp-2">
+          <h2 className="text-lg font-medium text-foreground line-clamp-2">
             {video.title}
           </h2>
         </Link>
@@ -217,7 +217,7 @@ const VideoCard: React.FC<{ video: VideoTypeResult }> = memo(({ video }) => {
 
 const ChannelLink: React.FC<{ channel: ChannelTypes }> = ({ channel }) => (
   <Link
-    to={`/channel/${channel.slug}`}
+    to={`/channel/${channel.id}`}
     className="text-sm text-muted-foreground"
   >
     <div className="flex items-center mt-2 gap-2 ">

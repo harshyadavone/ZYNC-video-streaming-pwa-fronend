@@ -47,6 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [shouldSearch, setShouldSearch] = useState<boolean>(false);
+  const resultClickedRef = useRef<boolean>(false);
 
   const recognitionRef = useRef<any>(null);
 
@@ -72,7 +73,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
     }
     setIsSearchOpen(false);
   }, [searchTerm, navigate]);
-
 
   const handleVoiceSearch = useCallback(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -103,7 +103,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
       setSearchTerm(transcript);
       setIsModalOpen(false);
       setIsListening(false);
-      setShouldSearch(true); 
+      setShouldSearch(true);
     };
 
     recognition.onerror = (event: any) => {
@@ -123,7 +123,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
 
     recognition.start();
   }, [setSearchTerm, handleSearch]);
-
 
   useEffect(() => {
     if (shouldSearch) {
@@ -151,11 +150,26 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
 
   const { title, isLoading } = useSearchTitle(searchTerm);
 
-  useEffect(() => {
-    if (!isFocused) {
-      setIsSearchOpen(false);
-    }
-  }, [isFocused]);
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+    setIsSearchOpen(searchTerm !== "");
+  }, [searchTerm]);
+
+  const handleBlur = useCallback(() => {
+    setTimeout(() => {
+      if (!resultClickedRef.current) {
+        setIsFocused(false);
+        setIsSearchOpen(false);
+      }
+      resultClickedRef.current = false;
+    }, 200);
+  }, []);
+
+  const handleResultClick = useCallback((title: string) => {
+    resultClickedRef.current = true;
+    setSearchTerm(title);
+    setShouldSearch(true);
+  }, []);
 
   return (
     <div className="relative w-full max-w-[600px] flex items-center">
@@ -166,8 +180,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
           placeholder={isListening ? "Listening..." : "Search"}
           value={searchTerm}
           onChange={handleInputChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onKeyPress={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -212,11 +226,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onMobileSearchClick }) => {
                   <Link
                     to={`/search/${encodeURIComponent(video.title)}`}
                     className="flex items-center gap-2"
-                    onClick={() => {
-                      setIsSearchOpen(false);
-                      setIsFocused(false);
-                      setSearchTerm(video.title);
-                    }}
+                    onMouseDown={(e) => e.preventDefault()} // Prevent blur
+                    onClick={() => handleResultClick(video.title)}
                   >
                     <Search
                       size={18}

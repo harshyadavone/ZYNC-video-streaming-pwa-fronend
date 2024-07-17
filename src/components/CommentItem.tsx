@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Edit,
   Trash2,
+  Loader2,
 } from "lucide-react";
 import { timeAgo } from "../lib/formatters";
 import DeepNestedComments from "./DeepNestedComments";
@@ -24,6 +25,8 @@ import EditCommentForm from "./EditCommentForm";
 import useAuth from "../hooks/useAuth";
 import Modal from "./Modal";
 import { GetRepliesResponse } from "../types/comments";
+import { COMMENTS_QUERY_KEY } from "../hooks/getChannelComments";
+import { UserIcon } from "./ui/Icons";
 
 interface CommentItemProps {
   comment: any;
@@ -33,7 +36,7 @@ interface CommentItemProps {
   level?: number;
 }
 
-const MAX_NESTED_LEVEL = 3;
+const MAX_NESTED_LEVEL = 2;
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
@@ -48,10 +51,13 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const { reaction, like, dislike } = useCommentReaction(comment.id);
+  const { reaction, like, dislike, dislikePending, likePending } =
+    useCommentReaction(comment.id);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const fetchReplies = async ({ pageParam = 1 }) : Promise<GetRepliesResponse> => {
+  const fetchReplies = async ({
+    pageParam = 1,
+  }): Promise<GetRepliesResponse> => {
     return await API.get(
       `/comment/comments/${comment.id}/replies?page=${pageParam}&limit=5`
     );
@@ -71,19 +77,23 @@ const CommentItem: React.FC<CommentItemProps> = ({
     queryKey: [REPLIES_QUERY_KEY, comment.id],
     queryFn: fetchReplies,
     getNextPageParam: (lastPage) =>
-      lastPage.pagination.currentPage < lastPage.pagination.totalPages ? lastPage.pagination.currentPage + 1
+      lastPage.pagination.currentPage < lastPage.pagination.totalPages
+        ? lastPage.pagination.currentPage + 1
         : undefined,
     initialPageParam: 1,
     enabled: showReplies,
   });
 
-
   const updateCommentMutation = useMutation({
     mutationFn: (content: string) =>
       API.put(`/comment/comments/${comment.id}`, { content }),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["replies", comment.parentId]});
-      queryClient.invalidateQueries({queryKey:["comments", videoId]});
+      queryClient.invalidateQueries({
+        queryKey: ["replies", comment.parentId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [COMMENTS_QUERY_KEY, videoId],
+      });
       setIsEditing(false);
     },
   });
@@ -91,8 +101,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const deleteCommentMutation = useMutation({
     mutationFn: () => API.delete(`/comment/comments/${comment.id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["replies", comment.parentId]});
-      queryClient.invalidateQueries({queryKey:["comments", videoId]});
+      queryClient.invalidateQueries({
+        queryKey: ["replies", comment.parentId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["comments", videoId] });
     },
   });
 
@@ -121,13 +133,17 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const renderCommentContent = () => (
     <>
       <div className="flex items-center mb-2">
-        <img
-          src={comment.user.avatar}
-          alt={comment.user.username}
-          className={`w-6 h-6 rounded-full mr-2 ${
-            owner && owner === comment.user.id && "pulse-avatar"
-          }`}
-        />
+        {comment.user.avatar ? (
+          <img
+            src={comment.user.avatar}
+            alt={comment.user.username}
+            className={`w-6 h-6 rounded-full mr-2 ${
+              owner && owner === comment.user.id && "pulse-avatar"
+            }`}
+          />
+        ) : (
+          <UserIcon className="w-6 h-6 rounded-full mr-2 bg-card text-white p-1" />
+        )}
         <span className="font-medium text-foreground mr-1">
           {comment.user.username}
         </span>
@@ -162,7 +178,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <MessageSquare size={14} className="mr-1" />
           Reply
         </button>
-       
+
         {user?.id === comment.user.id && (
           <>
             <button
@@ -202,7 +218,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </Modal>
           </>
         )}
-         {comment._count?.replies > 0 && (
+        {comment._count?.replies > 0 && (
           <button
             onClick={toggleReplies}
             className="text-sm text-primary hover:underline flex items-center"
@@ -216,7 +232,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
             {comment._count.replies === 1 ? "reply" : "replies"}
           </button>
         )}
-        
       </div>
     </>
   );
@@ -283,6 +298,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       >
         <div className="flex flex-col items-center mr-4">
           <button
+            disabled={likePending}
             onClick={() => like()}
             className={`p-1 rounded-lg ${
               reaction === "LIKE"
@@ -290,12 +306,17 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 : "text-muted-foreground hover:bg-primary/5"
             }`}
           >
-            <ArrowUp size={16} />
+            {likePending ? (
+              <Loader2 className=" h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowUp size={16} />
+            )}
           </button>
           <span className="text-sm font-medium my-1">
             {comment.likes - comment.dislikes}
           </span>
           <button
+            disabled={dislikePending}
             onClick={() => dislike()}
             className={`p-1 rounded-lg ${
               reaction === "DISLIKE"
@@ -303,7 +324,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 : "text-muted-foreground hover:bg-primary/5"
             }`}
           >
-            <ArrowDown size={16} />
+            {dislikePending ? (
+              <Loader2 className=" h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowDown size={16} />
+            )}
           </button>
         </div>
         <div className="flex-1 rounded-md p-3">

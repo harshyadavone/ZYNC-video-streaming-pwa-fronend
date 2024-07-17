@@ -23,7 +23,6 @@ const VerifyEmail: React.FC = () => {
                   : "bg-red-100 text-red-700"
               }`}
             >
-            
               {isSuccess ? "Email Verified!" : "Invalid Link"}
             </div>
             {isError && (

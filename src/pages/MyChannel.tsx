@@ -27,29 +27,32 @@ const MyChannel: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Videos");
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const tabs = ["Videos", "Playlists", "About"];
 
-
-  const { editForm, handleInputChange, handleFileChange } =
-    useChannelForm(channelData?.channel);
+  const { editForm, handleInputChange, handleFileChange } = useChannelForm(
+    channelData?.channel
+  );
 
   const closeCreateDialog = useCallback(() => {
     setIsCreateFormOpen(false);
   }, []);
 
-  const closeEditDialog = useCallback(() => {
-    setIsEditFormOpen(false);
-  }, []);
+  // const closeEditDialog = useCallback(() => {
+  //   setIsEditFormOpen(false);
+  // }, []);
 
-  const { mutate: updateMutation } = updateChannelMutation(closeEditDialog);
-
-  const { mutate: createMutation } =
+  const {
+    mutateAsync: updateMutation,
+  } = updateChannelMutation();
+  const { mutateAsync: createMutation } =
     useCreateChannelMutation(closeCreateDialog);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
+      setIsSubmitting(true);
       const formData = new FormData();
       Object.entries(editForm).forEach(([key, value]) => {
         if (value instanceof File || typeof value === "string") {
@@ -57,17 +60,27 @@ const MyChannel: React.FC = () => {
         }
       });
 
-      if (channelData?.channel) {
-        updateMutation(formData);
-      } else {
-        createMutation(formData);
+      try {
+        if (channelData?.channel) {
+          await updateMutation(formData);
+        } else {
+          await createMutation(formData);
+        }
+
+        // Close the dialog only after successful update/create
+        setIsEditFormOpen(false);
+        setIsCreateFormOpen(false);
+      } catch (error) {
+        console.error("Error updating/creating channel:", error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsSubmitting(false);
       }
-      // resetForm();
-      setIsEditFormOpen(false);
-      setIsCreateFormOpen(false);
     },
     [editForm, channelData?.channel, updateMutation, createMutation]
   );
+
+
 
   if (isLoading) return <MyChannelSkeleton />;
   if (!channelData) return <LoadingOverlay />;
@@ -91,8 +104,10 @@ const MyChannel: React.FC = () => {
             <VideoTab channelId={channelData.channel.id} />
           )}
           {activeTab === "Playlists" && (
-           <PlaylistsTab channelId={String(channelData.channel.id)} channel={channelData.channel}/>
-          // <p> Coming Soon </p>
+            <PlaylistsTab
+              channelId={String(channelData.channel.id)}
+              channel={channelData.channel}
+            />
           )}
           {activeTab === "About" && <div>About tab content goes here</div>}
           <ChannelForm
@@ -103,6 +118,7 @@ const MyChannel: React.FC = () => {
             onSubmit={handleSubmit}
             onInputChange={handleInputChange}
             onFileChange={handleFileChange}
+            isSubmitting={isSubmitting}
           />
         </>
       ) : (

@@ -349,7 +349,7 @@ const UploadPage: React.FC = () => {
               id="tags"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
-              placeholder="Add a tag"
+              placeholder="Add a tag without #"
               className="flex-grow"
               onKeyPress={(e) => {
                 if (e.key === "Enter") {

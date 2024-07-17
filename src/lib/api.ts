@@ -72,6 +72,7 @@ export const updateChannel = async (data: FormData) => {
   API.put(`/channels/update-channel`, data);
 };
 
+
 export const createChannel = async (data: FormData) => {
   API.post(`/channels/create-channel`, data);
 };

@@ -18,12 +18,14 @@ import {
   CornerDownRight,
   Edit,
   Trash2,
+  Loader2,
 } from "lucide-react";
 import { timeAgo } from "../lib/formatters";
 import EditCommentForm from "./EditCommentForm";
 import useAuth from "../hooks/useAuth";
 import Modal from "./Modal";
 import { GetRepliesResponse } from "../types/comments";
+import { UserIcon } from "./ui/Icons";
 
 interface CommentProps {
   comment: any;
@@ -125,16 +127,21 @@ const CommentComponent: React.FC<CommentProps> = ({
     ] as InvalidateQueryFilters);
   };
 
-  const { reaction, like, dislike } = useCommentReaction(comment.id);
+  const { reaction, like, dislike, dislikePending, likePending } =
+    useCommentReaction(comment.id);
 
   const renderCommentContent = () => (
     <>
       <div className="flex items-center mb-2">
-        <img
-          src={comment.user.avatar}
-          alt={comment.user.username}
-          className="w-6 h-6 rounded-full mr-2"
-        />
+        {comment.user.avatar ? (
+          <img
+            src={comment.user.avatar}
+            alt={comment.user.username}
+            className="w-6 h-6 rounded-full mr-2"
+          />
+        ) : (
+          <UserIcon className="w-6 h-6 rounded-full mr-2 bg-card text-white p-1" />
+        )}
         <span className="font-medium mr-2">{comment.user.username}</span>
         {owner === comment.user.id && (
           <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
@@ -175,8 +182,8 @@ const CommentComponent: React.FC<CommentProps> = ({
             {showReplies ? "Hide" : "Show"} {comment._count.replies} replies
           </button>
         )}
-        {/* @ts-ignore */}
-        {user.id === comment.user.id && (
+
+        {user?.id === comment.user.id && (
           <>
             <button
               onClick={() => setIsEditing(true)}
@@ -226,6 +233,7 @@ const CommentComponent: React.FC<CommentProps> = ({
       <div className="flex items-start">
         <div className="flex flex-col items-center mr-4">
           <button
+            disabled={likePending}
             onClick={() => like()}
             className={`p-1 rounded-lg ${
               reaction === "LIKE"
@@ -233,12 +241,17 @@ const CommentComponent: React.FC<CommentProps> = ({
                 : "text-muted-foreground hover:bg-primary/5"
             }`}
           >
-            <ArrowUp size={16} />
+            {likePending ? (
+              <Loader2 className=" h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowUp size={16} />
+            )}
           </button>
           <span className="text-sm font-medium my-1">
             {comment.likes - comment.dislikes}
           </span>
           <button
+            disabled={dislikePending}
             onClick={() => dislike()}
             className={`p-1 rounded-lg ${
               reaction === "DISLIKE"
@@ -246,7 +259,11 @@ const CommentComponent: React.FC<CommentProps> = ({
                 : "text-muted-foreground hover:bg-primary/5 "
             }`}
           >
-            <ArrowDown size={16} />
+            {dislikePending ? (
+              <Loader2 className=" h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowDown size={16} />
+            )}
           </button>
         </div>
         <div className="flex-1">

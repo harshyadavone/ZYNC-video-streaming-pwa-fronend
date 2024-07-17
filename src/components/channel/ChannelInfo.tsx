@@ -1,35 +1,26 @@
 import { Bell, CheckCircle, Share2 } from "lucide-react";
 import { Button } from "../ui/button";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-  } from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { Channel } from "../../hooks/my-channel/useGetMychannel";
 
-type Props ={
-    channel: Channel,
-    isVerified: boolean
-}
-
+type Props = {
+  channel: Channel;
+  isVerified: boolean;
+};
 
 const handleShare = () => {
-    // Implement share functionality
-    console.log("Share channel");
-  };
+  console.log("Share channel");
+};
 
-  const handleNotify = () => {
-    // Implement notification functionality
-    console.log("Toggle notifications");
-  };
+const handleNotify = () => {
+  console.log("Toggle notifications");
+};
 
-  const handleSubscribe = () => {
-    // Implement subscribe functionality
-    console.log("Subscribe to channel");
-  };
+const handleSubscribe = () => {
+  console.log("Subscribe to channel");
+};
 
-
-const ChannelInfo = ({channel, isVerified} : Props) => {
+const ChannelInfo = ({ channel, isVerified }: Props) => {
   return (
     <div className="pt-8 sm:pt-10 px-4 pb-4">
       <div className="flex flex-col sm:flex-row justify-between items-start">
@@ -76,7 +67,7 @@ const ChannelInfo = ({channel, isVerified} : Props) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-              disabled
+                disabled
                 variant="outline"
                 size="sm"
                 onClick={handleNotify}
@@ -90,7 +81,12 @@ const ChannelInfo = ({channel, isVerified} : Props) => {
               <p>Get notified about new videos</p>
             </TooltipContent>
           </Tooltip>
-          <Button size="sm" onClick={handleSubscribe} disabled className="disabled:cursor-not-allowed">
+          <Button
+            size="sm"
+            onClick={handleSubscribe}
+            disabled
+            className="disabled:cursor-not-allowed"
+          >
             Subscribe
           </Button>
         </div>

@@ -1,14 +1,22 @@
 // Sidebar.tsx
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X, CircleAlert, LogIn } from "lucide-react";
 import { truncateText } from "../../lib/TruncateText";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { menuItems } from "../Navigation";
-import { Settings02Icon } from "../ui/Icons";
+import { Logout02Icon, Settings02Icon } from "../ui/Icons";
 import useAuth from "../../hooks/useAuth";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import useLogout from "../../hooks/useLogout";
+import { toast } from "sonner";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -25,6 +33,21 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
+  const { logout } = useLogout();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    toast.loading("Logging out...");
+    try {
+      await logout();
+      toast.dismiss();
+      toast.success("Logged out successfully!");
+      navigate("/login");
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
 
   const renderUserInfo = () => {
     if (!isAuthenticated) {
@@ -38,21 +61,32 @@ const Sidebar: React.FC<SidebarProps> = ({
       );
     }
 
-    const truncatedEmail = truncateText(user && user.email || "", 10);
+    const truncatedEmail = truncateText((user && user.email) || "", 10);
+
+
 
     return (
       <div className="flex w-full items-center justify-center gap-4 p-5 border border-solid rounded-md light-beam ">
         <Avatar>
           <AvatarImage src={user?.avatar} />
           <AvatarFallback className="text-2xl font-medium">
-            {user && user.username?.slice(0, 1).toUpperCase() || ""}
+            {(user && user.username?.slice(0, 1).toUpperCase()) || ""}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <p className="slide-in-text">
             {!user?.verified ? (
               <div className="flex items-center justify-center gap-1">
-                <CircleAlert color="yellow" width={15} height={15} />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <CircleAlert color="yellow" width={15} height={15} />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Check your email for verification</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <span className="font-normal">{truncatedEmail}</span>
               </div>
             ) : (
@@ -136,15 +170,25 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </Button> */}
 
                 {isAuthenticated && (
-                  <Link to="/settings" onClick={onClose}>
+                  <>
                     <Button
-                      className="w-full font-medium flex gap-2 mt-2"
-                      variant="outline"
+                      onClick={handleLogout}
+                      className="w-full font-medium flex gap-2 mt-2 bg-accent/10 hover:text-primary group"
+                      variant="secondary"
                     >
-                      <Settings02Icon />
-                      <span>Settings</span>
+                      <Logout02Icon className="group-hover:text-primary" />
+                      <span>Log out</span>
                     </Button>
-                  </Link>
+                    <Link to="/settings" onClick={onClose}>
+                      <Button
+                        className="w-full font-medium flex gap-2 mt-2"
+                        variant="outline"
+                      >
+                        <Settings02Icon />
+                        <span>Settings</span>
+                      </Button>
+                    </Link>
+                  </>
                 )}
               </div>
             </div>

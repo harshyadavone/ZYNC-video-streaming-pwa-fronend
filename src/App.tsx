@@ -27,6 +27,8 @@ import BookmarkPage from "./pages/BookmarkPage";
 import MySubscriptionsPage from "./pages/MySubscriptionsPage";
 import OfflinePage from "./pages/OfflinePage";
 import NetworkStatus from "./pages/NetworkStatus";
+import NotFound from "./pages/NotFound";
+import WhatsNewAndBugReport from "./pages/WhatsNewAndBugReport";
 
 function App() {
   // set the navigate function on our API client for use in the axios error interceptor
@@ -60,7 +62,7 @@ function App() {
             <Route index element={<OtherSettings />} />
             <Route path="/settings/account" element={<Account />} />
             <Route path="/settings/notificatin" element={<Notification />} />
-            <Route path="/settings/session" element={<Sessions />} />
+            <Route path="/settings/sessions" element={<Sessions />} />
           </Route>
         </Route>
         <Route path="/" element={<Auth />}>
@@ -71,6 +73,8 @@ function App() {
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/password/reset" element={<ResetPassword />} />
         <Route path="/offline" element={<OfflinePage />} />
+        <Route path="/whats-new" element={<WhatsNewAndBugReport />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

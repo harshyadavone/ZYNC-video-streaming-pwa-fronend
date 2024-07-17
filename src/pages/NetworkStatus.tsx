@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { toast } from "sonner"; // Assuming you're using sonner for notifications
+import { toast } from "sonner";
 
 const NetworkStatus = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);

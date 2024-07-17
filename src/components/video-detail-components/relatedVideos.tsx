@@ -51,17 +51,12 @@ const RelatedVideos: React.FC = () => {
 
   return (
     // max-h-screen optionally
-    <div className="space-y-4 max-h-[calc(100vh-150px)]">
+    <div className="space-y-4 max-h-full">
       <div className="space-y-2">
         {relatedVideos.map((video) => (
           <Link key={video.id} to={`/video/${video.id}`} className="block">
             <div className="flex space-x-3  p-2 rounded-md transition-all duration-300 hover:bg-secondary/10">
               <div className="w-40 h-24 bg-secondary rounded-md overflow-hidden relative">
-                {/* <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                /> */}
                 <LazyImage
                   alt={video.title}
                   src={video.thumbnail}

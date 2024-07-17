@@ -73,7 +73,7 @@ const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
             <IconButton>
               {user && user.avatar ? (
                 <Link to={"/settings"}>
-                  <img src={user?.avatar} className="size-5" />
+                  <img src={user?.avatar} className="size-5 rounded-full" />
                 </Link>
               ) : (
                 <Link to={"/settings"}>

@@ -12,7 +12,7 @@ export const useCommentReaction = (commentId: number) => {
   const likeMutation = useMutation({
     mutationFn: () => API.post(`/comment/comments/${commentId}/like`),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["comments"]});
+      queryClient.invalidateQueries({queryKey: ["channelComments"]});
       queryClient.invalidateQueries({queryKey: ["commentReaction", commentId]});
     },
   });
@@ -20,7 +20,7 @@ export const useCommentReaction = (commentId: number) => {
   const dislikeMutation = useMutation({
     mutationFn: () => API.post(`/comment/comments/${commentId}/dislike`),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey:["comments"]});
+      queryClient.invalidateQueries({queryKey:["channelComments"]});
       queryClient.invalidateQueries({queryKey: ["commentReaction", commentId]});
     },
   });
@@ -29,6 +29,8 @@ export const useCommentReaction = (commentId: number) => {
     // @ts-ignore
     reaction: reaction?.reaction,
     like: likeMutation.mutate,
+    likePending : likeMutation.isPending,
     dislike: dislikeMutation.mutate,
+    dislikePending: dislikeMutation.isPending,
   };
 };

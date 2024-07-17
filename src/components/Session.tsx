@@ -116,17 +116,15 @@ const Sessions: React.FC = () => {
                     <DeleteSessionButton
                       sessionId={session.id}
                       onDelete={() => {
-                        toast.success("Session Deleted")
-                        queryClient.invalidateQueries({queryKey:[SESSIONS]})
+                        toast.success("Session Deleted");
+                        queryClient.invalidateQueries({ queryKey: [SESSIONS] });
                       }}
                     />
                   )}
                 </div>
               );
             })}
-          <div>
-
-          </div>
+          <div></div>
         </div>
       </div>
     </div>

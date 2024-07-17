@@ -23,7 +23,6 @@ const Login: React.FC = () => {
       });
     },
   });
-  console.log(error);
 
   interface ErrorObject {
     message: string;
@@ -34,6 +33,8 @@ const Login: React.FC = () => {
     message: string;
     errors: ErrorObject[];
   }
+
+
 
   return (
     <div>

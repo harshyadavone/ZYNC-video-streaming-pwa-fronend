@@ -1,6 +1,13 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const Auth = () => {
+  const user = useSelector((state: RootState) => state.user.user);
+  // @ts-ignore
+  if (user?.isAuthenticated) {
+    return <Navigate to={"/"} />;
+  }
   const params = useLocation();
 
   return (

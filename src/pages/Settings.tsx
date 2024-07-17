@@ -99,6 +99,8 @@ const Settings = () => {
     resetForm();
   };
 
+  console.log(editProfileMutation.status);
+
   // @ts-ignore
   const isUsernameAvailable = usernameAvailability?.isAvailable;
 
@@ -256,7 +258,7 @@ const Settings = () => {
           <div className="hidden md:block w-px bg-muted/45 self-stretch mx-8"></div>
 
           <div className="flex flex-col w-full md:w-2/3">
-            <div className="overflow-y-auto relative rounded-lg bg-card/50 backdrop-blur-sm shadow-inner">
+            <div className="overflow-y-auto relative rounded-lg bg-card/50 backdrop-blur-sm shadow-inner overflow-x-hidden">
               <AnimatedOutlet />
             </div>
           </div>

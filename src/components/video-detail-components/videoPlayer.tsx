@@ -34,7 +34,7 @@ import {
   VolumeHighIcon,
   VolumeOffIcon,
 } from "../ui/Icons";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef} from "react";
 
 type NewType = {
   src: string;
@@ -51,10 +51,6 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
     { src, duration, title, autoPlay = true, onTimeUpdate },
     ref
   ): JSX.Element => {
-    const playerRef = useRef<HTMLDivElement | null>(null);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-
     function onProviderChange(provider: any) {
       if (isHLSProvider(provider)) {
         provider.library = Hls;
@@ -85,42 +81,10 @@ const VideoPlayer = forwardRef<MediaPlayerInstance, Props>(
       Volume: IconWrapper(VolumeHighIcon),
     };
 
-    useEffect(() => {
-      const player = playerRef.current;
-      if (player) {
-        const settingsButton = player.querySelector('.plyr__control--settings') as HTMLElement;
-        const settingsMenu = player.querySelector('.plyr__menu__container') as HTMLElement;
-
-        if (settingsButton && settingsMenu) {
-          const handleSettingsToggle = () => {
-            setIsSettingsOpen(prev => !prev);
-          };
-
-          settingsButton.addEventListener('click', handleSettingsToggle);
-
-          // Cleanup function
-          return () => {
-            settingsButton.removeEventListener('click', handleSettingsToggle);
-          };
-        }
-      }
-    }, []);
-
-    useEffect(() => {
-      if (isSettingsOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-
-      return () => {
-        document.body.style.overflow = '';
-      };
-    }, [isSettingsOpen]);
 
 
     return (
-      <div className="custom-video-player" ref={playerRef}>
+      <div className="custom-video-player" >
         <MediaPlayer
           ref={ref}
           title={title}
